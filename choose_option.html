@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Role</title>
+    <link rel="stylesheet" href="choose_option.css">
+</head>
+<body>
+
+    <div class="login-container">
+        
+        <!-- Left Side: Form Area -->
+        <div class="login-left">
+            <h2>Choose Role ✨</h2>
+            <p class="subtitle">Select your account type to proceed with your dashboard experience.</p>
+            
+            <form action="dashboard.html" method="POST">
+                
+                <div class="role-selection">
+                    
+                    <!-- Option 1: Fleet Manager -->
+                    <label class="role-card">
+                        <input type="radio" name="role" value="fleet-manager" required checked>
+                        <div class="role-content">
+                            <span class="role-icon">🏢</span>
+                            <div class="role-details">
+                                <h3>I'm a Fleet Manager</h3>
+                                <p>Manage vehicles, monitor diagnostics, and oversee overall operations.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Option 2: Dispatcher -->
+                    <label class="role-card">
+                        <input type="radio" name="role" value="dispatcher" required>
+                        <div class="role-content">
+                            <span class="role-icon">📍</span>
+                            <div class="role-details">
+                                <p>I'm a Dispatcher</p>
+                                <p>Coordinate routes, track live transit, and handle daily dispatches.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                </div>
+                
+                <!-- Create Account / Submit Button -->
+                <button type="submit" class="submit-btn" style="margin-top: 25px;">Create Account</button>
+                
+            </form>
+            
+            <!-- Bottom Text -->
+            <p class="signup-text">Already have an account? <a href="login.html">Sign in</a></p>
+            
+            <div class="copyright">
+                &copy; 2026 All Rights Reserved.
+            </div>
+        </div>
+
+        <!-- Right Side: Image Area -->
+        <div class="login-right">
+            <div class="image-container"></div>
+        </div>
+
+    </div>
+
+</body>
+</html>
