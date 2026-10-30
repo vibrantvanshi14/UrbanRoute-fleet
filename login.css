@@ -1,0 +1,134 @@
+ /* CSS Reset & Variable Setup */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Centering the container vertically and horizontally on the screen */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+
+        /* The white card container holding the form */
+        .login-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header typography */
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333333;
+            font-size: 28px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #777777;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Form styling block */
+        .input {
+            margin-bottom: 20px;
+        }
+
+        .input label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555555;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Highlight effects when the user clicks inside an input */
+        .input input:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+        }
+
+        /* Links block (Remember Me & Forgot Password) */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666666;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Hover effect to make it feel responsive */
+        .submit-btn:hover {
+            background-color: #357abd;
+        }
+
+        /* Footer signup navigation */
+        .signup-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .signup-text a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-text a:hover {
+            text-decoration: underline;
+        }
