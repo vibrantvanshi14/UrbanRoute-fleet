@@ -7,7 +7,7 @@
         }
 
         body {
-            background-color: #1c1c1c; 
+            background-color:rgb(18, 93, 75); 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,12 +18,12 @@
         /* Main Card Container */
         .login-container {
             display: flex;
-            background-color: #ffffff;
+            background-color: rgba(223, 223, 208,0.88);
             border-radius: 20px;
             width: 100%;
             max-width: 950px;
             min-height: 600px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 30px rgba(175, 159, 159, 0.5);
             overflow: hidden;
         }
 
@@ -118,7 +118,7 @@
         .submit-btn {
             width: 100%;
             padding: 14px;
-            background-color: #1a202c;
+            background-color:rgb(18, 93, 75);
             color: #ffffff;
             border: none;
             border-radius: 8px;
@@ -129,7 +129,7 @@
         }
 
         .submit-btn:hover {
-            background-color: #000000;
+            background-color:rgb(11, 60, 49);
         }
 
         /* Divider */
