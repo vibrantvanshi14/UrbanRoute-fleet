@@ -12,44 +12,51 @@
         
         <!-- Left Side: Form Area -->
         <div class="login-left">
-            <h2>Get Started! </h2>
+            <h2>Get Started!</h2>
             <p class="subtitle">Create your account to continue exploring.</p>
             
-            <form>
+            <form id="signupForm" novalidate>
+                <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
+
                 <!-- Full Name Input -->
                 <div class="input-group">
                     <label for="fullname">Full Name</label>
                     <input type="text" id="fullname" name="fullname" placeholder="John Doe" required>
+                    <span class="error-msg" id="fullnameError"></span>
                 </div>
 
                 <!-- Email Input -->
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="Example@email.com" required>
+                    <span class="error-msg" id="emailError"></span>
                 </div>
                 
                 <!-- Password Input -->
                 <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
+                    <span class="error-msg" id="passwordError"></span>
                 </div>
 
                 <!-- Confirm Password Input -->
                 <div class="input-group">
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
+                    <span class="error-msg" id="confirmPasswordError"></span>
                 </div>
                 
                 <!-- Terms & Actions -->
                 <div class="form-actions">
                     <label class="remember-me">
-                        <input type="checkbox" name="terms" required> I agree to terms
+                        <input type="checkbox" name="terms" id="terms" required> I agree to terms
                     </label>
                     <a href="#" class="forgot-link">Help?</a>
                 </div>
+                <span class="error-msg" id="termsError"></span>
                 
                 <!-- Sign Up Button -->
-                <button type="submit" class="submit-btn"><a href="connect.html">Create Account</a></button>
+                <button type="submit" class="submit-btn">Create Account</button>
                 
                 <!-- Divider -->
                 <div class="divider">
@@ -58,10 +65,10 @@
                 
                 <!-- Social Buttons -->
                 <div class="social-login">
-                    <button type="button" class="social-btn">
+                    <button type="button" class="social-btn" id="googleSignupBtn">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"> Google
                     </button>
-                    <button type="button" class="social-btn">
+                    <button type="button" class="social-btn" id="facebookSignupBtn">
                         <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook"> Facebook
                     </button>
                 </div>
@@ -82,5 +89,6 @@
 
     </div>
 
+    <script src="signup.js"></script>
 </body>
 </html>
