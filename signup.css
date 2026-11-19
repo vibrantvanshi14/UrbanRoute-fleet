@@ -1,25 +1,4 @@
-        /* Apply the fade-in animation to the body when the page loads */
-body {
-  opacity: 1;
-  animation: fadeIn 0.5s ease-in-out forwards;
-}
-
-/* The class JavaScript will add right before moving to the next page */
-body.fade-out {
-  animation: fadeOut 0.5s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
 /* Reset */
-
 * {
     margin: 0;
     padding: 0;
@@ -282,7 +261,7 @@ body {
 .image-container {
     width: 100%;
     height: 100%;
-    background: url('MEDIA.jpeg') center/cover no-repeat;
+    background: url('WhatsApp Image 2026-10-31 at 3.59.51 PM.jpeg') center/cover no-repeat;
     border-radius: 16px;
 }
 
@@ -298,4 +277,29 @@ body {
     .login-left {
         padding: 40px 30px;
     }
+}
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 60px; /* Leaves space for the Show/Hide button */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(54, 83, 69);
+    cursor: pointer;
+    padding: 4px 6px;
+}
+
+.toggle-password:hover {
+    text-decoration: underline;
 }
