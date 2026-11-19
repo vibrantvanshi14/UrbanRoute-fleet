@@ -19,7 +19,7 @@ body.fade-out {
   to { opacity: 0; }
 }
 
-/* Reset */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -258,3 +258,57 @@ body.fade-out {
                 padding: 40px 30px;
             }
         }
+
+        .form-error {
+    display: none;
+    background-color: #fde8e8;
+    border: 1px solid #f8b4b4;
+    color: #b91c1c;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.form-error.visible {
+    display: block;
+}
+
+.input-group input.invalid {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+}
+
+.error-msg {
+    display: block;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+    min-height: 14px;
+}
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 60px; /* Leaves space for the Show/Hide button */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(54, 83, 69);
+    cursor: pointer;
+    padding: 4px 6px;
+}
+
+.toggle-password:hover {
+    text-decoration: underline;
+}
