@@ -196,28 +196,13 @@ signupForm.addEventListener("submit", async (e) => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Select all local anchor links (exclude external links or anchors like #id)
-  const links = document.querySelectorAll('a[href]:not([target="_blank"]):not([href^="#"])');
+document.querySelectorAll(".toggle-password").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const targetInput = document.getElementById(btn.dataset.target);
+        if (!targetInput) return;
 
-  links.forEach(link => {
-    link.addEventListener("click", (e) => {
-      // 1. Prevent the default instant page jump
-      e.preventDefault();
-      const targetUrl = link.href;
-
-      // 2. Add the fade-out class to trigger the CSS animation
-      document.body.classList.add("fade-out");
-
-      // 3. Wait for the animation to finish (500ms matches the CSS duration)
-      setTimeout(() => {
-        window.location.href = targetUrl;
-      }, 500); 
+        const isHidden = targetInput.type === "password";
+        targetInput.type = isHidden ? "text" : "password";
+        btn.textContent = isHidden ? "Hide" : "Show";
     });
-  });
-});
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted) {
-    document.body.classList.remove("fade-out");
-  }
 });
