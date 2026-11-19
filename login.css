@@ -1,4 +1,25 @@
-        /* Reset */
+        /* Apply the fade-in animation to the body when the page loads */
+body {
+  opacity: 1;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* The class JavaScript will add right before moving to the next page */
+body.fade-out {
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Reset */
         * {
             margin: 0;
             padding: 0;
