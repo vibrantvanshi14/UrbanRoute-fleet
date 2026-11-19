@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Locate your EV</title>
+  <link rel="stylesheet" href="ev_data.css" />
+</head>
+<body>
+  <main class="outer-card">
+    <section class="inner-card">
+      <header class="card-header">
+        <div>
+          <p class="eyebrow">VEHICLE SETUP</p>
+          <h1 class="title">Locate your EV</h1>
+        </div>
+        <div class="car-badge" aria-hidden="true">
+        </div>
+      </header>
+
+      <form id="evSetupForm" novalidate>
+        <!-- Card 1: Real GPS Location -->
+        <div class="status-card" id="locationCard">
+          <div class="status-left">
+            <div class="icon-box icon-peach" id="locationIconBox" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10Z" />
+                <circle cx="12" cy="11" r="2.2" />
+              </svg>
+            </div>
+            <div class="status-text">
+              <h2 id="locationTitle">Location not detected</h2>
+              <p id="locationSubtitle">Allow GPS access to detect your EV's live location</p>
+            </div>
+          </div>
+          <button type="button" class="action-link" id="detectLocationBtn">Detect</button>
+        </div>
+
+        <!-- Card 2: EV Details Form -->
+        <div class="form-card">
+          <div class="field-group">
+            <label for="evName">EV Vehicle Name</label>
+            <input
+              type="text"
+              id="evName"
+              name="evName"
+              placeholder="Enter vehicle name"
+              autocomplete="off"
+              required
+            />
+            <small class="field-error" id="evNameError"></small>
+          </div>
+
+          <div class="field-group">
+            <label for="evBattery">Battery (%)</label>
+            <input
+              type="number"
+              id="evBattery"
+              name="evBattery"
+              placeholder="0 to 100"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+            <small class="field-error" id="evBatteryError"></small>
+          </div>
+
+          <div class="field-group">
+            <label for="evRange">Range (km)</label>
+            <input
+              type="number"
+              id="evRange"
+              name="evRange"
+              placeholder="Enter remaining range in km"
+              min="0"
+              step="1"
+              required
+            />
+            <small class="field-error" id="evRangeError"></small>
+          </div>
+        </div>
+
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+
+        <button type="submit" class="primary-btn" id="saveBtn" disabled>
+          <span>Save and continue</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+
+        <div class="secondary-actions">
+          <button type="button" class="clear-btn" id="clearBtn">Clear details</button>
+        </div>
+      </form>
+
+      <p class="footer-note">Enter all EV details and detect live GPS location to continue.</p>
+    </section>
+  </main>
+
+  <script src="ev_data.js"></script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: rgba(223, 223, 208, 0.88);
+  color: #18221b;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.outer-card {
+  width: 100%;
+  max-width: 460px;
+  background-color: #ffffff;
+  border-radius: 36px;
+  padding: 14px;
+  box-shadow: 0 20px 50px rgba(24, 34, 27, 0.06);
+}
+
+.inner-card {
+  background-color: rgb(239, 239, 239);
+  border-radius: 26px;
+  padding: 28px 24px;
+  border: 1px solid #eef2ec;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #7c857d;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: rgb(54, 83, 69);
+  letter-spacing: -0.02em;
+}
+
+.car-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background-color: #e4efe1;
+  color: #1b432c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Location Status Card */
+.status-card {
+  background-color: #ffffff;
+  border: 1px solid #e5ebe4;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.status-card.error {
+  border-color: #d93025;
+  background-color: #fffafa;
+}
+
+.status-card.detected {
+  border-color: #c5dec0;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.icon-peach {
+  background-color: #fff0e6;
+  color: #c85a28;
+}
+
+.icon-green {
+  background-color: #e4efe1;
+  color: #1b432c;
+}
+
+.status-text {
+  min-width: 0;
+}
+
+.status-text h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #18221b;
+  margin-bottom: 2px;
+}
+
+.status-text p {
+  font-size: 13px;
+  color: #6b746d;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.status-card.error .status-text p {
+  color: #c5221f;
+}
+
+.action-link {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b432c;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.action-link:hover:not(:disabled) {
+  background-color: #edf4eb;
+}
+
+.action-link:disabled {
+  color: #8c968e;
+  cursor: not-allowed;
+}
+
+/* EV Details Card */
+.form-card {
+  background-color: #ffffff;
+  border: 1px solid #e5ebe4;
+  border-radius: 20px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(54, 83, 69);
+}
+
+.field-group input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #18221b;
+  background-color: #fafbf9;
+  border: 1px solid #dce3db;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.field-group input:focus {
+  border-color: #1b432c;
+  background-color: #ffffff;
+}
+
+.field-group input.invalid {
+  border-color: #d93025;
+  background-color: #fffafa;
+}
+
+.field-error {
+  font-size: 12px;
+  color: #c5221f;
+  min-height: 15px;
+}
+
+/* Form Status Message */
+.form-status {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  min-height: 18px;
+  margin-bottom: 12px;
+}
+
+.form-status.error {
+  color: #c5221f;
+}
+
+.form-status.success {
+  color: #1b432c;
+}
+
+/* Primary Pill Button */
+.primary-btn {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 999px;
+  background-color: #1b432c;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background-color: #143321;
+}
+
+.primary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Secondary Actions & Footer */
+.secondary-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b746d;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.clear-btn:hover {
+  color: #18221b;
+  background-color: #eef2ec;
+}
+
+.footer-note {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #7c857d;
+  line-height: 1.4;
+}
+
+        /* Apply the fade-in animation to the body when the page loads */
+body {
+  opacity: 1;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* The class JavaScript will add right before moving to the next page */
+body.fade-out {
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+#locationTitle{
+    color:rgb(54, 83, 69);
+}
