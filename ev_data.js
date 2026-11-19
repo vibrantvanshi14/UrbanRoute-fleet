@@ -295,3 +295,9 @@ window.addEventListener("pageshow", (event) => {
     document.body.classList.remove("fade-out");
   }
 });
+localStorage.setItem("evSetupData", JSON.stringify(evSetupData));
+setFormStatus("Saved successfully. Opening dashboard...", "success");
+
+setTimeout(() => {
+  window.location.href = "route_planner.html";
+}, 400);
