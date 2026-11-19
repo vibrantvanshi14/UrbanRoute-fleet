@@ -181,3 +181,94 @@ window.addEventListener("pageshow", (event) => {
     document.body.classList.remove("fade-out");
   }
 });
+
+// Pre-fill email if redirected from signup.html
+const prefillEmail = sessionStorage.getItem("prefillLoginEmail");
+if (prefillEmail) {
+    emailInput.value = prefillEmail;
+    sessionStorage.removeItem("prefillLoginEmail");
+}
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+        return;
+    }
+
+    const payload = {
+        email: emailInput.value.trim(),
+        password: passwordInput.value,
+        remember: rememberInput ? rememberInput.checked : false
+    };
+
+    const submitBtn = form.querySelector(".submit-btn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Signing in...";
+
+    try {
+        let matchedUser = null;
+
+        if (MOCK_USERS_URL && !MOCK_USERS_URL.includes("YOUR-PROJECT-ID")) {
+            const url = `${MOCK_USERS_URL}?email=${encodeURIComponent(payload.email)}`;
+            const response = await fetch(url, { method: "GET" });
+            const data = await response.json().catch(() => ([]));
+
+            if (!response.ok) {
+                showFormError(data.message || `Server error (${response.status}).`);
+                return;
+            }
+
+            const list = Array.isArray(data) ? data : (data.users || []);
+            matchedUser = list.find(
+                (u) =>
+                    u.email &&
+                    u.email.toLowerCase() === payload.email.toLowerCase() &&
+                    u.password === payload.password
+            );
+        } else {
+            const users = getLocalUsers();
+            matchedUser = users.find(
+                (u) =>
+                    u.email.toLowerCase() === payload.email.toLowerCase() &&
+                    u.password === payload.password
+            );
+        }
+
+        if (!matchedUser) {
+            showFormError("Invalid email or password.");
+            passwordInput.classList.add("invalid");
+            return;
+        }
+
+        if (payload.remember) {
+            localStorage.setItem("loggedInUser", JSON.stringify({ email: matchedUser.email }));
+        } else {
+            sessionStorage.setItem("loggedInUser", JSON.stringify({ email: matchedUser.email }));
+        }
+
+        // Smooth fade-out and redirect to EV setup page
+  // Smooth fade-out and redirect to EV setup page
+document.body.classList.add("fade-out");
+setTimeout(() => {
+    window.location.href = "ev_data.html";
+}, 500);
+    } catch (err) {
+        console.error("Login error:", err);
+        showFormError("Unable to reach the login server. Check Console (F12) for details.");
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Sign in";
+    }
+});
+
+document.querySelectorAll(".toggle-password").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const targetInput = document.getElementById(btn.dataset.target);
+        if (!targetInput) return;
+
+        const isHidden = targetInput.type === "password";
+        targetInput.type = isHidden ? "text" : "password";
+        btn.textContent = isHidden ? "Hide" : "Show";
+    });
+});
