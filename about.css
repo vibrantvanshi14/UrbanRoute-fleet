@@ -1,6 +1,6 @@
         /* Apply the fade-in animation to the body when the page loads */
 html{
-        scroll-behavior:smooth
+        scroll-behavior:smooth;
 }
 body {
   opacity: 1;
