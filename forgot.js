@@ -3,7 +3,7 @@
         // ======================================================
         const EMAILJS_PUBLIC_KEY  = "lChGmkQ1pT21hu5h3";
         const EMAILJS_SERVICE_ID  = "service_rmrfgka";
-        const EMAILJS_TEMPLATE_ID = "template_ghbppsd";
+        const EMAILJS_TEMPLATE_ID = "template_gk7fe72";
         const SENDER_EMAIL        = "helpline.urbanroutefleet@gmail.com";
 
         // EmailJS initialize karo (agar key set ki hai)
@@ -229,29 +229,3 @@
             isOtpVerified = false;
             showStep(step1);
         });
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Select all local anchor links (exclude external links or anchors like #id)
-  const links = document.querySelectorAll('a[href]:not([target="_blank"]):not([href^="#"])');
-
-  links.forEach(link => {
-    link.addEventListener("click", (e) => {
-      // 1. Prevent the default instant page jump
-      e.preventDefault();
-      const targetUrl = link.href;
-
-      // 2. Add the fade-out class to trigger the CSS animation
-      document.body.classList.add("fade-out");
-
-      // 3. Wait for the animation to finish (500ms matches the CSS duration)
-      setTimeout(() => {
-        window.location.href = targetUrl;
-      }, 500); 
-    });
-  });
-});
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted) {
-    document.body.classList.remove("fade-out");
-  }
-});
