@@ -11,6 +11,22 @@ const passwordError = document.getElementById("passwordError");
 const confirmPasswordError = document.getElementById("confirmPasswordError");
 const termsError = document.getElementById("termsError");
 const formError = document.getElementById("formError");
+document.getElementById('helpLink').addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('fullname').value.trim() || 'User';
+  const email = document.getElementById('email').value.trim() || 'Not provided';
+
+  const subject = encodeURIComponent('Signup Help Request - Urban Route Fleet');
+  const body = encodeURIComponent(
+    `Hi Urban Route Fleet Support,\n\n` +
+    `Name: ${name}\n` +
+    `Account Email: ${email}\n\n` +
+    `Problem Description:\n[Please describe your issue here]`
+  );
+
+  window.location.href = `mailto:helpline.urbanroutefleet@gmail.com?subject=${subject}&body=${body}`;
+});
 
 // Use the EXACT same endpoint as login.js, or leave empty "" for localStorage testing
 const MOCK_USERS_URL = "";
