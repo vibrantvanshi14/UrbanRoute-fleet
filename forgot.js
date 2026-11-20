@@ -8,8 +8,10 @@
 
         // EmailJS initialize karo (agar key set ki hai)
         if (EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
-            emailjs.init(EMAILJS_PUBLIC_KEY);
-        }
+    emailjs.init({
+        publicKey: EMAILJS_PUBLIC_KEY,
+    });
+}
 
         // Variables to store current state
         let userEmail = "";
@@ -70,11 +72,11 @@
                         }
                     })
                     .catch(function (error) {
-                        sendBtn.disabled = false;
-                        sendBtn.textContent = "Send OTP";
-                        alert("Failed to send OTP. Please check your EmailJS setup.");
-                        console.error("EmailJS Error:", error);
-                    });
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send OTP";
+    alert("EmailJS Error: " + (error.text || JSON.stringify(error)));
+    console.error("EmailJS Error:", error);
+});
             } else {
                 // Demo Mode (Jab tak EmailJS keys nahi daali hain, testing ke liye)
                 alert(
