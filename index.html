@@ -3,124 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Urban-Route-Fleet</title>
+  <title>Urban Route Fleet — Smart EV Mobility</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:ital,wght@1,500;1,600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="about.css">
 </head>
 <body>
 
-  <!-- PAGE LOADER WITH LIVE PERCENTAGE -->
+  <!-- SUBTLE FILM GRAIN OVERLAY FOR GRADIENT DEPTH -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- PAGE LOADER -->
   <div class="page-loader" id="pageLoader">
-    <div class="loader-logo">Urban Route Fleet</div>
-    <div class="loader-percent" id="loaderPercent">0%</div>
+    <div class="loader-inner">
+      <div class="loader-logo">Urban Route Fleet</div>
+      <div class="loader-track">
+        <div class="loader-progress" id="loaderProgress"></div>
+      </div>
+      <div class="loader-percent" id="loaderPercent">0%</div>
+    </div>
   </div>
 
-  <!-- NAVIGATION -->
+  <!-- NAVIGATION (MORPHS INTO FLOATING GLASS PILL ON SCROLL) -->
   <header class="navbar" id="navbar">
-    <div class="nav-left">
-      <a href="#about" class="nav-link">ABOUT</a>
-      <a href="#contact-us" class="nav-link">CONTACT</a>
-      <a href="login.html" class="nav-link">LOGIN</a>
-    </div>
+    <a href="#heroSection" class="logo">
+      <span class="logo-mark"></span>
+      <div class="logo-text">
+        Urban Route Fleet
+        <span>EV TRIPS MADE EASIER</span>
+      </div>
+    </a>
 
-    <div class="logo">
-      Urban Route Fleet
-      <span>EV TRIPS MADE EASIER</span>
-    </div>
+    <nav class="nav-right">
+      <a href="#heroSection" class="nav-link">About</a>
+      <a href="#contact-us" class="nav-link">Contact</a>
+      <a href="login.html" class="nav-cta magnetic">Login</a>
+    </nav>
   </header>
 
-  <!-- HERO SECTION WITH INTERACTIVE POLLEN CANVAS -->
+  <!-- HERO SECTION -->
   <section class="hero observe-me" id="heroSection">
-    <canvas id="pollenCanvas"></canvas>
+    <!-- Ambient Gradient Orbs & Cursor Spotlight -->
+    <div class="ambient-orb orb-1" aria-hidden="true"></div>
+    <div class="ambient-orb orb-2" aria-hidden="true"></div>
+    <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
 
-    <h1 class="hero-title velocity-skew zoom-text" id="heroTitle">
-      <span class="reveal-mask"><span class="reveal-line delay-1">TRAVEL MADE</span></span>
-      <span class="reveal-mask"><span class="reveal-line delay-2">EFFORTLESS</span></span>
-    </h1>
+    <!-- Generative AI Route-Flow Canvas -->
+    <canvas id="routeCanvas" aria-hidden="true"></canvas>
 
+    <div class="hero-content">
+      <h1 class="hero-title" id="heroTitle">
+        <span class="title-line">Travel Made</span>
+        <span class="title-line gradient-text">Effortless</span>
+      </h1>
+
+      <div class="hero-actions">
+        <a href="login.html" class="btn-primary magnetic">
+          <span>Start Your Route</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#contact-us" class="btn-ghost magnetic">Talk to Us</a>
+      </div>
+    </div>
+
+    <!-- LAYERED SWEEPING LIME WAVES + EV CHARGING SCENE -->
     <div class="ev-animation-stage">
+      <svg class="hero-wave" viewBox="0 0 1440 280" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="waveBack" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6DD95A" stop-opacity="0.32" />
+            <stop offset="100%" stop-color="#B4F05A" stop-opacity="0.18" />
+          </linearGradient>
+          <linearGradient id="waveFront" x1="0" y1="0" x2="1" y2="0.8">
+            <stop offset="0%" stop-color="#C6F76D" />
+            <stop offset="55%" stop-color="#9BE84E" />
+            <stop offset="100%" stop-color="#5FD454" />
+          </linearGradient>
+        </defs>
+        <path d="M0,185 C420,165 920,40 1440,0 L1440,280 L0,280 Z" fill="url(#waveBack)" />
+        <path d="M0,220 C390,195 980,75 1440,22 L1440,280 L0,280 Z" fill="url(#waveFront)" />
+      </svg>
+
       <svg viewBox="0 0 1440 320" class="ev-scene-svg" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="beamGrad" x1="1" y1="0.5" x2="0" y2="0.5">
-            <stop offset="0%" stop-color="#FFF9D2" stop-opacity="0.65" />
-            <stop offset="100%" stop-color="#FFF9D2" stop-opacity="0" />
+            <stop offset="0%" stop-color="#FFFDE0" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#FFFDE0" stop-opacity="0" />
           </linearGradient>
-          <filter id="energyGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <linearGradient id="stationBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFFFFF" />
+            <stop offset="100%" stop-color="#E6F5EC" />
+          </linearGradient>
+          <filter id="energyGlow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
         </defs>
 
-        <ellipse cx="720" cy="278" rx="680" ry="10" fill="rgba(0, 0, 0, 0.12)" />
+        <!-- Ground Contact Shadow -->
+        <ellipse cx="720" cy="278" rx="680" ry="8" fill="rgba(7, 36, 27, 0.16)" />
 
         <!-- CHARGING STATION -->
         <g class="charging-station" transform="translate(470, 75)">
-          <rect x="-12" y="190" width="94" height="14" rx="5" fill="#23372D" />
-          <rect x="0" y="0" width="70" height="192" rx="14" fill="#365345" stroke="#263B31" stroke-width="2" />
-          <rect x="19" y="14" width="32" height="32" rx="9" fill="#294136" />
-          <path d="M28 38 C28 26, 42 22, 44 22 C44 32, 36 38, 28 38 Z M28 38 L37 29" stroke="#FFFFFF" stroke-width="2.2" fill="none" stroke-linecap="round" />
-          <rect x="10" y="56" width="50" height="64" rx="6" fill="#17241E" stroke="#4A6B5B" stroke-width="1.5" />
-          <text id="ev-battery-pct" x="35" y="82" fill="#4ADE80" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">20%</text>
-          <rect x="17" y="94" width="36" height="12" rx="3" fill="#263B31" />
-          <rect class="battery-fill-bar" x="19" y="96" width="7" height="8" rx="2" fill="#4ADE80" />
-          <rect x="68" y="105" width="8" height="24" rx="3" fill="#23372D" />
+          <rect x="-12" y="190" width="94" height="14" rx="5" fill="#082D21" />
+          <rect x="0" y="0" width="70" height="192" rx="14" fill="url(#stationBody)" stroke="#082D21" stroke-width="2.5" />
+          <rect x="19" y="14" width="32" height="32" rx="9" fill="#0F4634" />
+          <path d="M28 38 C28 26, 42 22, 44 22 C44 32, 36 38, 28 38 Z M28 38 L37 29" stroke="#B4F05A" stroke-width="2.4" fill="none" stroke-linecap="round" />
+          <rect x="10" y="56" width="50" height="64" rx="6" fill="#07241B" />
+          <text id="ev-battery-pct" x="35" y="82" fill="#B4F05A" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" text-anchor="middle">20%</text>
+          <rect x="17" y="94" width="36" height="12" rx="3" fill="#144D3A" />
+          <rect class="battery-fill-bar" x="19" y="96" width="7" height="8" rx="2" fill="#B4F05A" />
+          <rect x="68" y="105" width="8" height="24" rx="3" fill="#082D21" />
         </g>
 
-        <path class="charging-cable-base" d="M 544 192 C 570 250, 615 250, 645 227" fill="none" stroke="#23372D" stroke-width="5" stroke-linecap="round" />
-        <path class="charging-cable-pulse" d="M 544 192 C 570 250, 615 250, 645 227" fill="none" stroke="#4ADE80" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 14" filter="url(#energyGlow)" />
+        <!-- CHARGING CABLE & ENERGY PULSE -->
+        <path class="charging-cable-base" d="M 544 192 C 570 250, 615 250, 645 227" fill="none" stroke="#082D21" stroke-width="5.5" stroke-linecap="round" />
+        <path class="charging-cable-pulse" d="M 544 192 C 570 250, 615 250, 645 227" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="8 14" filter="url(#energyGlow)" />
 
+        <!-- EV SCOOTER -->
         <g class="scooty-mover">
           <g class="scooty-chassis">
-            <polygon class="scooty-beam" points="18,62 -115,28 -115,110" fill="url(#beamGrad)" />
-            <line class="scooty-kickstand" x1="88" y1="138" x2="104" y2="138" stroke="#23372D" stroke-width="4" stroke-linecap="round" />
-            
+            <polygon class="scooty-beam" points="18,62 -125,24 -125,114" fill="url(#beamGrad)" />
+            <line class="scooty-kickstand" x1="88" y1="138" x2="104" y2="138" stroke="#082D21" stroke-width="4" stroke-linecap="round" />
+
+            <!-- Rear Wheel -->
             <g transform="translate(152, 138)">
               <g class="scooty-wheel">
-                <circle r="24" fill="#1E2421" />
-                <circle r="15" fill="#DEE8DD" />
-                <line x1="-15" y1="0" x2="15" y2="0" stroke="#365345" stroke-width="3" />
-                <line x1="0" y1="-15" x2="0" y2="15" stroke="#365345" stroke-width="3" />
-                <circle r="5" fill="#365345" />
+                <circle r="24" fill="#082D21" />
+                <circle r="15" fill="#E9F9EE" />
+                <line x1="-15" y1="0" x2="15" y2="0" stroke="#0F4634" stroke-width="3" />
+                <line x1="0" y1="-15" x2="0" y2="15" stroke="#0F4634" stroke-width="3" />
+                <circle r="5" fill="#082D21" />
               </g>
             </g>
 
+            <!-- Front Wheel -->
             <g transform="translate(32, 138)">
               <g class="scooty-wheel">
-                <circle r="24" fill="#1E2421" />
-                <circle r="15" fill="#DEE8DD" />
-                <line x1="-15" y1="0" x2="15" y2="0" stroke="#365345" stroke-width="3" />
-                <line x1="0" y1="-15" x2="0" y2="15" stroke="#365345" stroke-width="3" />
-                <circle r="5" fill="#365345" />
+                <circle r="24" fill="#082D21" />
+                <circle r="15" fill="#E9F9EE" />
+                <line x1="-15" y1="0" x2="15" y2="0" stroke="#0F4634" stroke-width="3" />
+                <line x1="0" y1="-15" x2="0" y2="15" stroke="#0F4634" stroke-width="3" />
+                <circle r="5" fill="#082D21" />
               </g>
             </g>
 
-            <path d="M 8 130 A 26 26 0 0 1 54 122" fill="none" stroke="#365345" stroke-width="6" stroke-linecap="round" />
-            <path d="M 28 134 L 46 50 L 34 30 L 48 26 L 60 124 L 114 124 C 118 88, 168 88, 174 126 C 174 136, 164 138, 152 138 Z" fill="#DEE8DD" stroke="#365345" stroke-width="3" stroke-linejoin="round" />
-            <path d="M 118 118 C 125 98, 158 98, 164 118 Z" fill="#365345" />
-            <rect x="106" y="76" width="54" height="15" rx="7" fill="#23372D" />
-            <rect x="26" y="22" width="18" height="7" rx="3.5" fill="#23372D" />
-            <circle cx="24" cy="58" r="8" fill="#365345" />
-            <ellipse cx="19" cy="58" rx="3" ry="6" fill="#FFF9D2" />
-            <circle class="scooty-port" cx="65" cy="112" r="5.5" fill="#23372D" stroke="#365345" stroke-width="2" />
+            <!-- Body -->
+            <path d="M 8 130 A 26 26 0 0 1 54 122" fill="none" stroke="#0F4634" stroke-width="6" stroke-linecap="round" />
+            <path d="M 28 134 L 46 50 L 34 30 L 48 26 L 60 124 L 114 124 C 118 88, 168 88, 174 126 C 174 136, 164 138, 152 138 Z" fill="#FFFFFF" stroke="#082D21" stroke-width="3" stroke-linejoin="round" />
+            <path d="M 118 118 C 125 98, 158 98, 164 118 Z" fill="#0F4634" />
+            <rect x="106" y="76" width="54" height="15" rx="7" fill="#082D21" />
+            <rect x="26" y="22" width="18" height="7" rx="3.5" fill="#082D21" />
+            <circle cx="24" cy="58" r="8" fill="#0F4634" stroke="#082D21" stroke-width="2" />
+            <ellipse cx="19" cy="58" rx="3" ry="6" fill="#FFFDE0" />
+            <circle class="scooty-port-ripple" cx="65" cy="112" r="5.5" fill="none" stroke="#B4F05A" stroke-width="2" />
+            <circle class="scooty-port" cx="65" cy="112" r="5.5" fill="#082D21" stroke="#0F4634" stroke-width="2" />
           </g>
         </g>
       </svg>
     </div>
   </section>
 
-
   <!-- FOOTER -->
-  <footer class="footer observe-me">
-    <div class="footer-top" id="contact-us">
-      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=helpline.urbanroutefleet@gmail.com" target="_blank" rel="noopener noreferrer">CONTACT US</a>
+  <footer class="footer observe-me" id="contact-us">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Urban Route Fleet</div>
+        <p>Built for effortless, zero-anxiety electric journeys.</p>
+      </div>
+      <a class="footer-contact-btn magnetic" href="https://mail.google.com/mail/?view=cm&fs=1&to=helpline.urbanroutefleet@gmail.com" target="_blank" rel="noopener noreferrer">
+        Contact Us ↗
+      </a>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 Urban Route Fleet. All rights reserved</div>
+      <div>© 2026 Urban Route Fleet. All rights reserved.</div>
       <div class="footer-bottom-links">
         <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
+        <a href="#">Terms &amp; Conditions</a>
       </div>
     </div>
   </footer>
