@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urban Route Fleet — Navigation, Traffic &amp; Charging Slot</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="navigation.css" />
+</head>
+<body>
+  <!-- Serrated Ticket ClipPath -->
+  <svg width="0" height="0" style="position:absolute; pointer-events:none;">
+    <defs>
+      <clipPath id="ticketClip" clipPathUnits="objectBoundingBox">
+        <path d="
+          M 0.06,0
+          L 0.095,0.014 L 0.13,0 L 0.165,0.014 L 0.20,0 L 0.235,0.014 L 0.27,0
+          L 0.305,0.014 L 0.34,0 L 0.375,0.014 L 0.41,0 L 0.445,0.014 L 0.48,0
+          L 0.515,0.014 L 0.55,0 L 0.585,0.014 L 0.62,0 L 0.655,0.014 L 0.69,0
+          L 0.725,0.014 L 0.76,0 L 0.795,0.014 L 0.83,0 L 0.865,0.014 L 0.90,0 L 0.94,0
+          A 0.06,0.044 0 0 0 1,0.044
+          L 1,0.956
+          A 0.06,0.044 0 0 0 0.94,1
+          L 0.90,1 L 0.865,0.986 L 0.83,1 L 0.795,0.986 L 0.76,1 L 0.725,0.986 L 0.69,1
+          L 0.655,0.986 L 0.62,1 L 0.585,0.986 L 0.55,1 L 0.515,0.986 L 0.48,1
+          L 0.445,0.986 L 0.41,1 L 0.375,0.986 L 0.34,1 L 0.305,0.986 L 0.27,1
+          L 0.235,0.986 L 0.20,1 L 0.165,0.986 L 0.13,1 L 0.095,0.986 L 0.06,1
+          A 0.06,0.044 0 0 0 0,0.956
+          L 0,0.044
+          A 0.06,0.044 0 0 0 0.06,0 Z
+        " />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <main class="app-shell" id="appShell">
+
+    <!-- LEFT PANEL: MAP PREVIEW & FULL-SCREEN GOOGLE MAPS-STYLE NAVIGATION -->
+    <section class="map-panel" id="navMapPanel">
+      <div id="navMap"></div>
+
+      <!-- Standard Preview Top Bar -->
+      <div class="preview-header" id="previewHeader">
+        <button type="button" class="back-pill-btn" id="btnBackToPlanner">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Route Planner</span>
+        </button>
+        <div class="brand-text">Urban Route Fleet</div>
+      </div>
+
+      <!-- Preview Map Layer Toggle & Zoom -->
+      <div class="map-controls-pill" id="previewMapControls">
+        <button type="button" class="map-ctrl-btn" id="btnToggleLayer" title="Switch Streets / Satellite" aria-label="Switch map layer">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="map-ctrl-btn" id="btnZoomIn" title="Zoom in" aria-label="Zoom in">+</button>
+        <button type="button" class="map-ctrl-btn" id="btnZoomOut" title="Zoom out" aria-label="Zoom out">&minus;</button>
+      </div>
+
+      <!-- LIVE NAVIGATION HUD -->
+      <div class="nav-hud" id="navHud" aria-hidden="true">
+        <!-- Top Turn-by-Turn Direction Banner -->
+        <div class="nav-top-banner">
+          <div class="nav-turn-main">
+            <div class="nav-turn-icon" id="navTurnIcon">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </div>
+            <div class="nav-turn-copy">
+              <div class="nav-turn-dist" id="navStepDistance">--</div>
+              <div class="nav-turn-instruction" id="navStepInstruction">Loading turn-by-turn directions...</div>
+            </div>
+          </div>
+          <div class="nav-next-bar" id="navNextBar">
+            <span class="nav-next-label">Then</span>
+            <span class="nav-next-text" id="navNextStepText">--</span>
+          </div>
+        </div>
+
+        <!-- Wrong-Route Alert Banner -->
+        <div class="route-alert-banner danger" id="offRouteAlert" role="alertdialog" aria-live="assertive">
+          <div class="alert-header">
+            <div class="alert-icon danger">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div>
+              <div class="alert-title">You are going on a wrong route</div>
+              <div class="alert-sub" id="offRouteSub">You moved off the selected path. Re-route from here or continue with this route only?</div>
+            </div>
+          </div>
+          <div class="alert-actions">
+            <button type="button" class="btn-alert-primary" id="btnReplanRoute">Re-route</button>
+            <button type="button" class="btn-alert-secondary" id="btnKeepPrevRoute">Continue with this route only</button>
+          </div>
+        </div>
+
+        <!-- Live Traffic Ahead Alert Banner -->
+        <div class="route-alert-banner traffic" id="trafficAheadAlert" role="alertdialog" aria-live="assertive">
+          <div class="alert-header">
+            <div class="alert-icon traffic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div>
+              <div class="alert-title">Traffic detected while travelling</div>
+              <div class="alert-sub" id="trafficAlertSub">Heavy traffic ahead (+7 min delay). Do you want to re-route or continue with this route only?</div>
+            </div>
+          </div>
+          <div class="alert-actions">
+            <button type="button" class="btn-alert-primary" id="btnChangeTrafficRoute">Re-route</button>
+            <button type="button" class="btn-alert-secondary" id="btnContinueTrafficRoute">Continue with this route only</button>
+          </div>
+        </div>
+
+        <!-- Right Floating Navigation Controls -->
+        <div class="nav-side-controls">
+          <button type="button" class="nav-round-btn" id="btnNavRecenter" title="Recenter on Arrow" aria-label="Recenter">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path>
+              <circle cx="12" cy="12" r="7"></circle>
+            </svg>
+          </button>
+          <button type="button" class="nav-round-btn" id="btnSimulateDrive" title="Simulate smooth live drive" aria-label="Simulate drive">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </button>
+          <button type="button" class="nav-round-btn" id="btnNavLayer" title="Toggle Streets / Satellite" aria-label="Toggle layer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </button>
+          <button type="button" class="nav-round-btn" id="btnPrevStep" title="Previous step" aria-label="Previous step">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button type="button" class="nav-round-btn" id="btnNextStep" title="Next step" aria-label="Next step">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bottom Speed + ETA + Exit Bar -->
+        <div class="nav-bottom-wrap">
+          <div class="nav-speed-badge">
+            <span class="speed-num" id="navSpeedVal">0</span>
+            <span class="speed-unit">km/h</span>
+          </div>
+
+          <div class="nav-bottom-bar">
+            <div class="nav-eta-group">
+              <div class="nav-eta-main" id="navEtaRemaining">--</div>
+              <div class="nav-eta-sub" id="navMetaSub">-- km &middot; ETA --</div>
+            </div>
+            <button type="button" class="nav-exit-btn" id="btnExitNavigation">Exit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Message -->
+      <div class="map-toast" id="navToast" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- RIGHT PANEL: TRIP SUMMARY, VERIFIED CHARGING STATION & IN-APP PAYMENT -->
+    <aside class="sidebar-panel" id="sidebarPanel">
+
+      <!-- Empty State -->
+      <section class="card-box" id="noTripCard" style="display: none;">
+        <div class="section-eyebrow">NO ACTIVE ROUTE</div>
+        <h1 class="card-heading">No trip selected</h1>
+        <p class="muted-copy">Calculate and select a route in the Route Planner first to book a verified charging slot or start live navigation.</p>
+        <button type="button" class="btn-primary" id="btnGoPlannerEmpty">Open Route Planner</button>
+      </section>
+
+      <!-- Main Trip Content -->
+      <div id="tripContentWrap">
+
+        <!-- 1. Trip Summary & Launch Navigation Card -->
+        <section class="card-box">
+          <div class="card-top-row">
+            <div>
+              <div class="section-eyebrow">READY TO DRIVE</div>
+              <h1 class="card-heading" id="tripRouteTitle">Selected Route</h1>
+            </div>
+            <span class="pill-badge" id="tripTrafficBadge">--</span>
+          </div>
+
+          <div class="trip-endpoints">
+            <div class="endpoint-row">
+              <span class="dot start"></span>
+              <span class="endpoint-text" id="tripStartLabel">--</span>
+            </div>
+            <div class="endpoint-row" id="tripChargerRow" style="display: none;">
+              <span class="dot charger" id="tripChargerDot"></span>
+              <span class="endpoint-text" id="tripChargerLabel">--</span>
+              <span class="charging-done-pill" id="tripChargingDonePill" style="display: none;">Charging Done ✓</span>
+            </div>
+            <div class="endpoint-row">
+              <span class="dot end"></span>
+              <span class="endpoint-text" id="tripEndLabel">--</span>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-label">DISTANCE</span>
+              <span class="stat-value" id="statDistance">--</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">EST. TIME</span>
+              <span class="stat-value" id="statDuration">--</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">ARRIVAL</span>
+              <span class="stat-value" id="statArrival">--</span>
+            </div>
+          </div>
+
+          <div class="nav-launch-actions">
+            <button type="button" class="btn-primary" id="btnStartNav">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+              <span>Start Full-Screen Navigation</span>
+            </button>
+            <p class="helper-note">Red segments on the map show heavy traffic zones along your route.</p>
+          </div>
+        </section>
+
+        <!-- 2. Verified Charging Station Slot Booking & Payment Card -->
+        <section class="card-box" id="slotBookingCard">
+          <div class="card-top-row">
+            <div>
+              <div class="section-eyebrow">VERIFIED STATION RESERVATION</div>
+              <h2 class="card-heading">Charging Station Slot</h2>
+            </div>
+            <span class="pill-badge neutral" id="bookingStateBadge">Checking</span>
+          </div>
+
+          <!-- Verified Station Selector -->
+          <div class="field-group" id="verifiedStationSelectGroup">
+            <label for="selectVerifiedStation">Select verified charging station</label>
+            <select id="selectVerifiedStation" class="text-input">
+              <option value="">Searching real charging stations nearby...</option>
+            </select>
+          </div>
+
+          <div class="station-summary" id="stationSummaryBox">
+            <div class="station-name" id="slotStationName">Checking real stations...</div>
+            <div class="station-meta" id="slotStationMeta">Only real, verified stations on OpenStreetMap / Open Charge Map can be booked.</div>
+          </div>
+
+          <div id="bookingFormBody">
+            <div class="form-row-two">
+              <div class="field-group">
+                <label for="inputBookingDate">Date</label>
+                <input type="date" id="inputBookingDate" class="text-input" />
+              </div>
+              <div class="field-group">
+                <label for="selectBookingTime">Time slot (30 min)</label>
+                <select id="selectBookingTime" class="text-input"></select>
+              </div>
+            </div>
+
+            <div class="form-row-two">
+              <div class="field-group">
+                <label for="inputDriverVehicle">Vehicle / Driver name</label>
+                <input type="text" id="inputDriverVehicle" class="text-input" placeholder="Your vehicle or name" autocomplete="off" />
+              </div>
+              <div class="field-group">
+                <label for="inputChargerCount">Available chargers</label>
+                <input type="number" id="inputChargerCount" class="text-input" min="1" max="50" readonly />
+              </div>
+            </div>
+
+            <div class="occupancy-box" id="occupancyBox">
+              <div class="occupancy-title" id="occupancyTitle">Checking slot availability...</div>
+              <div class="occupancy-detail" id="occupancyDetail"></div>
+            </div>
+
+            <div class="booking-actions" id="bookingActions">
+              <button type="button" class="btn-primary" id="btnConfirmSlot" disabled>Pay ₹50 &amp; Book Slot</button>
+              <button type="button" class="btn-secondary" id="btnChangeSlot" style="display: none;">Change Slot</button>
+              <button type="button" class="btn-ghost" id="btnSkipBooking">Continue without booking</button>
+            </div>
+          </div>
+
+          <!-- Docked Confirmed Charging Ticket (Sidebar Destination) -->
+          <div class="docked-ticket-stage" id="confirmedTicketBox" style="display: none;">
+            <div class="docked-ticket-slot" id="dockedTicketSlot">
+              <div class="urf-ticket-shadow">
+                <div class="urf-ticket-card docked">
+                  <div class="urf-ticket-top">
+                    <span class="urf-ticket-tag" id="ticketSessionStatus">BOOKING CONFIRMED</span>
+                    <span class="urf-ticket-bay" id="ticketBayLabel">Charger #1</span>
+                  </div>
+
+                  <div class="urf-ticket-station" id="ticketStationName">--</div>
+
+                  <div class="urf-ticket-details">
+                    <div class="urf-detail-row">
+                      <span>SLOT TIMING</span>
+                      <strong id="ticketTimeMeta">--</strong>
+                    </div>
+                    <div class="urf-detail-row">
+                      <span>VEHICLE</span>
+                      <strong id="ticketVehicleName">--</strong>
+                    </div>
+                    <div class="urf-detail-row">
+                      <span>RECEIPT CODE</span>
+                      <strong id="ticketReceiptId">RCP-000000</strong>
+                    </div>
+                  </div>
+
+                  <div class="urf-ticket-divider"></div>
+
+                  <div class="urf-ticket-pin-box">
+                    <div>
+                      <div class="urf-pin-label">UNLOCK PIN</div>
+                      <div class="urf-pin-sub" id="ticketAmountLabel">₹50 Paid</div>
+                    </div>
+                    <div class="urf-pin-code" id="ticketUnlockPin">----</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn-primary ticket-session-btn" id="btnToggleSession">Start Charging Session</button>
+            <div class="ticket-actions">
+              <button type="button" class="btn-secondary" id="btnReprintTicket">Replay Printer</button>
+              <button type="button" class="btn-secondary" id="btnModifyBooking">Change Slot</button>
+            </div>
+            <button type="button" class="btn-danger-outline" id="btnCancelCurrentBooking">Cancel Booking</button>
+          </div>
+
+          <!-- Skipped Notice -->
+          <div class="skipped-box" id="skippedBookingBox" style="display: none;">
+            <p>Proceeding without a pre-booked charging slot.</p>
+            <button type="button" class="link-btn" id="btnReopenBooking">Book a verified slot instead</button>
+          </div>
+
+          <!-- Existing Bookings List -->
+          <div class="existing-bookings-wrap" id="existingBookingsWrap">
+            <div class="existing-header">
+              <span>Bookings at this station (<span id="existingBookingsCount">0</span>)</span>
+            </div>
+            <div class="existing-list" id="existingBookingsList">
+              <div class="existing-empty">No slots booked yet for this station.</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </main>
+
+  <!-- REAL UPI QR & APP PAYMENT MODAL (5-MINUTE VALIDITY -> urbanroutefleet@ibl) -->
+  <div class="payment-modal-backdrop" id="paymentModalBackdrop" aria-hidden="true">
+    <div class="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payModalTitle">
+      <div class="pay-modal-top">
+        <div>
+          <div class="pay-brand">URBAN ROUTE FLEET · REAL UPI PAY</div>
+          <h3 id="payModalTitle">Scan &amp; Pay ₹50.00</h3>
+        </div>
+        <button type="button" class="pay-close-btn" id="btnClosePaymentModal" aria-label="Close payment">&times;</button>
+      </div>
+
+      <div class="pay-summary-card">
+        <div class="pay-row">
+          <span>Station</span>
+          <strong id="payModalStation">--</strong>
+        </div>
+        <div class="pay-row">
+          <span>Date &amp; Slot</span>
+          <strong id="payModalSlot">--</strong>
+        </div>
+        <div class="pay-row total">
+          <span>Payable to Urban Route Fleet</span>
+          <strong>₹50.00</strong>
+        </div>
+      </div>
+
+      <!-- 5-Minute Valid Scannable UPI QR Code -->
+      <div class="upi-qr-card">
+        <div class="upi-timer-row">
+          <span class="upi-timer-dot"></span>
+          <span>QR valid for <strong id="payQrTimer">05:00</strong></span>
+        </div>
+
+        <div class="upi-qr-frame" id="upiQrFrame">
+          <div id="upiQrCanvas" aria-label="Urban Route Fleet UPI QR Code"></div>
+          <div class="upi-qr-expired-mask" id="upiQrExpiredMask">
+            <span>QR Expired</span>
+            <button type="button" class="btn-regenerate-qr" id="btnRegenerateQr">Generate New QR</button>
+          </div>
+        </div>
+
+        <div class="upi-id-pill">
+          <span>UPI ID:</span>
+          <strong id="upiIdDisplay">urbanroutefleet@ibl</strong>
+          <button type="button" class="btn-copy-upi" id="btnCopyUpiId" title="Copy UPI ID">Copy</button>
+        </div>
+
+        <!-- Clickable UPI App Buttons -->
+        <div class="upi-apps-grid">
+          <button type="button" class="upi-app-btn" id="upiLinkGpay" data-app="gpay">GPay</button>
+          <button type="button" class="upi-app-btn" id="upiLinkPhonePe" data-app="phonepe">PhonePe</button>
+          <button type="button" class="upi-app-btn" id="upiLinkPaytm" data-app="paytm">Paytm</button>
+          <button type="button" class="upi-app-btn primary" id="upiDeepLink" data-app="any">Any UPI App</button>
+        </div>
+
+        <!-- App Not Installed Warning Banner -->
+        <div class="upi-app-alert" id="upiAppAlert" role="alert" style="display: none;"></div>
+      </div>
+
+      <!-- Automatic Payment Status Listener -->
+      <div class="upi-live-status" id="upiLiveStatus">
+        <span class="upi-live-spinner" aria-hidden="true"></span>
+        <span id="upiLiveStatusText">Waiting for ₹50.00 payment confirmation...</span>
+      </div>
+
+      <div class="pay-action-row">
+        <button type="button" class="btn-danger-outline" id="btnFailInAppPayment">Cancel Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT SUCCESSFUL / UNSUCCESSFUL POPUP -->
+  <div class="payment-status-backdrop" id="paymentStatusBackdrop" aria-hidden="true">
+    <div class="payment-status-modal" id="paymentStatusModal" role="alertdialog" aria-modal="true">
+      <div class="pay-status-icon" id="payStatusIcon"></div>
+      <h3 class="pay-status-title" id="payStatusTitle">Payment Successful</h3>
+      <p class="pay-status-msg" id="payStatusMsg">₹50.00 received by Urban Route Fleet.</p>
+      <button type="button" class="btn-primary" id="btnPaymentStatusOk">Continue</button>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN BLACKISH FADE + CENTER KIOSK PRINTER OVERLAY -->
+  <div class="kiosk-overlay" id="kioskOverlay" aria-hidden="true">
+    <div class="kiosk-anchor" id="kioskAnchor">
+
+      <!-- Kiosk Printer Hardware -->
+      <div class="printer-body" id="kioskPrinterBody">
+        <div class="printer-led" id="kioskPrinterLed"></div>
+        <div class="printer-brand">urf<span>tickets</span></div>
+        <div class="printer-slot"></div>
+
+        <div class="button-well">
+          <button type="button" class="pink-btn" id="kioskPinkBtn" aria-label="Print ticket">
+            <div class="tap-hint" id="kioskTapHint">
+              <div class="tap-ripple"></div>
+              <svg class="tap-hand-svg" viewBox="0 0 48 48" fill="none">
+                <path d="M21 12v14m0-14a2.8 2.8 0 0 1 5.6 0v9.5m0-4.5a2.6 2.6 0 0 1 5.2 0v5.5m0-3.5a2.6 2.6 0 0 1 5.2 0v7.5c0 6.5-4.5 11.5-11 11.5h-2.5c-4.8 0-8.2-2.7-10.4-6.9l-3.7-6.8a2.7 2.7 0 0 1 4.5-3l3.1 3.7"
+                      stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </button>
+        </div>
+        <div class="tap-label">PRINTING SLOT TICKET</div>
+      </div>
+
+      <!-- Clipped Paper Chute -->
+      <div class="paper-chute" id="kioskPaperChute">
+        <!-- White Starter Stub -->
+        <svg class="starter-stub" id="kioskStarterStub" viewBox="0 0 204 36" fill="none">
+          <defs>
+            <linearGradient id="stubGrad" x1="0" y1="0" x2="0" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#c9ceca"/>
+              <stop offset="32%" stop-color="#f7f8f7"/>
+              <stop offset="100%" stop-color="#ffffff"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,0 H204 V24 A12,12 0 0 0 192,36 H184 L179,32 L174,36 L169,32 L164,36 L159,32 L154,36 L149,32 L144,36 L139,32 L134,36 L129,32 L124,36 L119,32 L114,36 L109,32 L104,36 L99,32 L94,36 L89,32 L84,36 L79,32 L74,36 L69,32 L64,36 L59,32 L54,36 L49,32 L44,36 L39,32 L34,36 L29,32 L24,36 H12 A12,12 0 0 0 0,24 Z"
+                fill="url(#stubGrad)"/>
+        </svg>
+
+        <!-- Ticket + 3D Layered Hand Assembly -->
+        <div class="ticket-assembly" id="kioskTicketAssembly">
+
+          <!-- Back Layer of Hand -->
+          <div class="hand-layer hand-back" id="kioskHandBack">
+            <svg viewBox="0 0 184 120" fill="none">
+              <defs>
+                <linearGradient id="skinBack" x1="20" y1="20" x2="140" y2="100" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#e5923c"/>
+                  <stop offset="100%" stop-color="#b5641b"/>
+                </linearGradient>
+                <linearGradient id="sleeveGrad" x1="125" y1="45" x2="184" y2="105" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#1ca743"/>
+                  <stop offset="100%" stop-color="#0b6123"/>
+                </linearGradient>
+              </defs>
+              <rect x="28" y="34" width="66" height="58" rx="22" fill="url(#skinBack)"/>
+              <path d="M56 32 C84 26, 118 34, 140 52 L128 96 C98 92, 66 88, 46 78 Z" fill="url(#skinBack)"/>
+              <path d="M138 48 L184 58 L184 114 L122 100 Z" fill="url(#sleeveGrad)"/>
+              <ellipse cx="132" cy="74" rx="10" ry="27" transform="rotate(14 132 74)" fill="#08481a"/>
+            </svg>
+          </div>
+
+          <!-- Printed Green Serrated Ticket -->
+          <div class="urf-ticket-shadow" id="kioskTicketWrap">
+            <div class="urf-ticket-card">
+              <div class="urf-ticket-content" id="kioskTicketContent">
+                <div class="urf-ticket-top">
+                  <span class="urf-ticket-tag">EV CHARGING TICKET</span>
+                  <span class="urf-ticket-bay" id="ovTicketBay">Charger #1</span>
+                </div>
+
+                <div class="urf-ticket-station" id="ovTicketStation">--</div>
+
+                <div class="urf-ticket-details">
+                  <div class="urf-detail-row">
+                    <span>SLOT TIMING</span>
+                    <strong id="ovTicketTime">--</strong>
+                  </div>
+                  <div class="urf-detail-row">
+                    <span>VEHICLE</span>
+                    <strong id="ovTicketVehicle">--</strong>
+                  </div>
+                  <div class="urf-detail-row">
+                    <span>RECEIPT CODE</span>
+                    <strong id="ovTicketReceipt">RCP-000000</strong>
+                  </div>
+                </div>
+
+                <div class="urf-ticket-divider"></div>
+
+                <div class="urf-ticket-pin-box">
+                  <div>
+                    <div class="urf-pin-label">UNLOCK PIN</div>
+                    <div class="urf-pin-sub" id="ovTicketAmount">₹50 Paid</div>
+                  </div>
+                  <div class="urf-pin-code" id="ovTicketPin">----</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Front Layer of Hand -->
+          <div class="hand-layer hand-front" id="kioskHandFront">
+            <svg viewBox="0 0 184 120" fill="none">
+              <defs>
+                <linearGradient id="thumbGrad" x1="10" y1="30" x2="135" y2="85" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#ffb85c"/>
+                  <stop offset="55%" stop-color="#f29a38"/>
+                  <stop offset="100%" stop-color="#d47922"/>
+                </linearGradient>
+                <linearGradient id="sleeveFront" x1="130" y1="45" x2="184" y2="105" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#22be4e"/>
+                  <stop offset="100%" stop-color="#0d6e29"/>
+                </linearGradient>
+              </defs>
+              <path d="M16 42 C32 32, 74 44, 118 58 C126 66, 122 86, 102 84 C68 78, 30 68, 16 58 Z"
+                    fill="rgba(0,0,0,0.22)" transform="translate(0, 6)"/>
+              <path d="M14 40 C24 28, 52 34, 88 46 C110 53, 132 54, 142 54 L132 96 C106 94, 86 84, 62 75 C36 66, 12 56, 14 40 Z"
+                    fill="url(#thumbGrad)"/>
+              <path d="M24 41 C40 36, 66 43, 94 52" stroke="rgba(255,235,195,0.5)" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="27" cy="44" rx="7" ry="4.5" transform="rotate(14 27 44)" fill="rgba(255,232,198,0.42)"/>
+              <path d="M138 48 L184 58 L184 114 L122 100 Z" fill="url(#sleeveFront)"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create account — Urban Route Fleet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+
+  <canvas id="routeCanvas" aria-hidden="true"></canvas>
+  <div class="cursor-spotlight" id="cursorSpotlight" aria-hidden="true"></div>
+
+  <div class="split-layout">
+    <!-- LEFT: FORM CANVAS -->
+    <main class="form-pane">
+      <header class="pane-header stagger">
+        <a href="about.html" class="logo">
+          <span class="logo-mark"></span>
+          <div class="logo-text">
+            Urban Route Fleet
+            <span>EV TRIPS MADE EASIER</span>
+          </div>
+        </a>
+        <a href="about.html" class="back-home">← Home</a>
+      </header>
+
+      <div class="form-container">
+        <div class="form-heading stagger">
+          <h1>Create your account</h1>
+          <p>Start planning range-aware EV routes in seconds.</p>
+        </div>
+
+        <form id="signupForm" novalidate>
+          <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
+
+          <div class="field stagger">
+            <label for="fullname">Full name</label>
+            <div class="input-icon-wrap">
+              <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input type="text" id="fullname" name="fullname" placeholder="Anya Verma" autocomplete="name" required>
+            </div>
+            <span class="error-msg" id="fullnameError"></span>
+          </div>
+
+          <div class="field stagger">
+            <label for="email">Email</label>
+            <div class="input-icon-wrap">
+              <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <input type="email" id="email" name="email" placeholder="name@example.com" autocomplete="email" required>
+            </div>
+            <span class="error-msg" id="emailError"></span>
+          </div>
+
+          <div class="field-row stagger">
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="input-icon-wrap password-wrapper">
+                <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="password" name="password" placeholder="Min. 8 chars" autocomplete="new-password" required>
+                <button type="button" class="toggle-password" data-target="password">Show</button>
+              </div>
+              <div class="strength-bar" aria-hidden="true">
+                <span id="strengthFill"></span>
+              </div>
+              <span class="error-msg" id="passwordError"></span>
+            </div>
+
+            <div class="field">
+              <label for="confirmPassword">Confirm password</label>
+              <div class="input-icon-wrap password-wrapper">
+                <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter" autocomplete="new-password" required>
+                <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+              </div>
+              <span class="error-msg" id="confirmPasswordError"></span>
+            </div>
+          </div>
+
+          <label class="checkbox-row stagger">
+            <input type="checkbox" name="terms" id="terms" required>
+            <span>I agree to the Terms of Service and Privacy Policy</span>
+          </label>
+          <span class="error-msg" id="termsError"></span>
+
+          <button type="submit" class="submit-btn magnetic stagger">Create account</button>
+
+          <div class="divider stagger"><span>or sign up with</span></div>
+
+          <div class="social-grid stagger">
+            <button type="button" class="social-btn" id="googleSignupBtn">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="" width="18" height="18">
+              <span>Google</span>
+            </button>
+            <button type="button" class="social-btn" id="facebookSignupBtn">
+              <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="" width="18" height="18">
+              <span>Facebook</span>
+            </button>
+          </div>
+        </form>
+
+        <p class="switch-auth stagger">
+          Already have an account? <a href="login.html">Sign in</a>
+        </p>
+      </div>
+
+      <footer class="pane-footer stagger">
+        <span>© 2026 Urban Route Fleet</span>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=helpline.urbanroutefleet@gmail.com" target="_blank" rel="noopener noreferrer">Support</a>
+      </footer>
+    </main>
+
+    <!-- RIGHT: CLEAN ILLUSTRATION SHOWCASE PANEL -->
+    <aside class="visual-pane" aria-hidden="true">
+      <div class="visual-card">
+        <div class="visual-top-bar">
+          <div class="visual-status">
+            <span class="status-dot"></span>
+            <span>CONFLICT-FREE CHARGING SLOTS</span>
+          </div>
+          <span class="visual-version">v2.6</span>
+        </div>
+
+        <div class="illustration-stage">
+          <img src="MEDIA.jpg" alt="Urban Route Fleet EV Charging Illustration" class="hero-illustration">
+        </div>
+
+        <div class="visual-footer">
+          <div class="visual-metrics">
+            <div class="metric-pill">
+              <span class="metric-label">ROUTING</span>
+              <span class="metric-val">Range-Aware</span>
+            </div>
+            <div class="metric-pill">
+              <span class="metric-label">BOOKING</span>
+              <span class="metric-val">Zero-Conflict Slots</span>
+            </div>
+            <div class="metric-pill">
+              <span class="metric-label">RESERVATION</span>
+              <span class="metric-val">Instant Pass</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="signup.js"></script>
+</body>
+</html>
